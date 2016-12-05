@@ -124,9 +124,11 @@ ARG INSTALL_MONGO=false
 ENV INSTALL_MONGO ${INSTALL_MONGO}
 RUN if [ ${INSTALL_MONGO} = true ]; then \
     # Install the mongodb extension
-    pecl install mongodb && \
-    echo "extension=mongodb.so" >> /etc/php/7.0/cli/php.ini \
+    pecl install mongodb \
+    #echo "extension=mongodb.so" >> /etc/php/7.0/cli/php.ini \
 ;fi
+
+COPY ./mongodb.ini /etc/php/7.0/cli/conf.d/30-mongodb.ini 
 
 #####################################
 # Drush:
@@ -244,6 +246,34 @@ USER laradock
 
 RUN echo "" >> ~/.bashrc && \
     echo 'export PATH="/var/www/vendor/bin:$PATH"' >> ~/.bashrc
+
+#####################################
+# custom installations
+#####################################
+
+USER root
+
+# install nodejs
+RUN apt-get update && \
+    apt-get install -y nodejs && \
+    ln -s /usr/bin/nodejs /usr/bin/node
+
+# install npm
+RUN apt-get install -y npm
+
+# install php7.0-ldap
+RUN apt-get install -y php7.0-ldap
+
+# install elixir
+RUN npm install --global gulp-cli
+
+# install envoy
+RUN composer global require "laravel/envoy=~1.0" && \
+    echo 'export PATH=$PATH:~/.composer/vendor/bin' >> ~/.bashrc
+
+# aliases
+RUN echo "alias art='php artisan'" >> ~/.bashrc
+
 
 #
 #--------------------------------------------------------------------------

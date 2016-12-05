@@ -7,8 +7,9 @@ services:
     applications:
         image: tianon/true
         volumes:
-            - ../:/var/www
-#            - ../sample/:/var/www/sample
+            - ../www:/var/www
+            - ../www/derma10:/var/www/derma10
+            - ../www/playroom:/var/www/playroom
 
 ### Workspace Utilities Container ###########################
 
@@ -17,7 +18,7 @@ services:
             context: ./workspace
             args:
                 - INSTALL_XDEBUG=false
-                - INSTALL_MONGO=false
+                - INSTALL_MONGO=true
                 - INSTALL_NODE=false
                 - INSTALL_YARN=false
                 - INSTALL_DRUSH=false
@@ -44,7 +45,7 @@ services:
             context: ./php-fpm
             args:
                 - INSTALL_XDEBUG=false
-                - INSTALL_MONGO=false
+                - INSTALL_MONGO=true
                 - INSTALL_ZIP_ARCHIVE=false
                 - INSTALL_MEMCACHED=false
                 - INSTALL_OPCACHE=false
