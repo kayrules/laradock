@@ -140,6 +140,17 @@ RUN if [ ${CODEIGNITER} = true ]; then \
      docker-php-ext-install tokenizer \
 ;fi
 
+#####################################
+# custom installations
+#####################################
+
+# install ldap extension
+RUN \
+    apt-get update && \
+    apt-get install libldap2-dev -y && \
+    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+    docker-php-ext-install ldap
+
 #
 #--------------------------------------------------------------------------
 # Final Touch
@@ -149,7 +160,7 @@ RUN if [ ${CODEIGNITER} = true ]; then \
 ADD ./laravel.ini /usr/local/etc/php/conf.d
 ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
 
-RUN rm -r /var/lib/apt/lists/*
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN usermod -u 1000 www-data
 
